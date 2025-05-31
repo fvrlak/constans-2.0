@@ -8,8 +8,8 @@
     "npm": "6.4.1"
   },
   "scripts": {
-    "css": "sass --style=compressed ./public/styles/style.scss ./public/styles/style.css",
-    "scss": "sass --watch ./public/styles/style.scss:./public/styles/style.css",
+    "css": "npx sass --style=compressed ./public/styles/style.scss ./public/styles/style.css",
+    "scss": "npx sass --watch ./public/styles/style.scss:./public/styles/style.css",
     "nodemon": "nodemon server.js",
     "webpack": "webpack --mode development ./public/js/index.js --output ./public/bundle.js ",
     "webpack-watch": "webpack --mode development --watch ./public/js/index.js --output ./public/bundle.js",
@@ -30,6 +30,7 @@
   "devDependencies": {
     "dart-sass": "^1.25.0",
     "npm-run-all": "^4.1.3",
+    "sass": "^1.26.10",
     "sass-loader": "^7.1.0",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"

@@ -1,7 +1,11 @@
 [build]
-  command = "npm install && npm run css"
+  command = "npm ci && npx sass --style=compressed ./public/styles/style.scss ./public/styles/style.css && npm run webpack"
   publish = "public"
   functions = "functions"
+
+[build.environment]
+  NODE_VERSION = "10.11.0"
+  NPM_VERSION = "6.4.1"
 
 [dev]
   command = "npm run startDev"
