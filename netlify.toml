@@ -1,5 +1,5 @@
 [build]
-  command = "npm ci && npx sass --style=compressed ./public/styles/style.scss ./public/styles/style.css && npm run webpack"
+  command = "npm install && npx sass --style=compressed ./public/styles/style.scss ./public/styles/style.css && npx webpack --mode development ./public/js/index.js --output ./public/bundle.js"
   publish = "public"
   functions = "functions"
 

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": "10.11.0",
-    "npm": "6.4.1"
+    "node": ">=10.11.0",
+    "npm": ">=6.4.1"
   },
   "scripts": {
     "css": "npx sass --style=compressed ./public/styles/style.scss ./public/styles/style.css",
@@ -15,7 +15,7 @@
     "webpack-watch": "webpack --mode development --watch ./public/js/index.js --output ./public/bundle.js",
     "startDev": "npm-run-all --parallel css  nodemon scss webpack webpack-watch",
     "start": "node server.js",
-    "build": "npm run css && npm run webpack"
+    "build": "npx sass --style=compressed ./public/styles/style.scss ./public/styles/style.css && webpack --mode development ./public/js/index.js --output ./public/bundle.js"
   },
   "author": "",
   "license": "ISC",
