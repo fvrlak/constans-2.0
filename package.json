@@ -8,13 +8,14 @@
     "npm": "6.4.1"
   },
   "scripts": {
-    "css": "dart-sass --style=compressed ./public/styles/style.scss ./public/styles/style.css",
-    "scss": "dart-sass --watch ./public/styles/style.scss:./public/styles/style.css",
+    "css": "sass --style=compressed ./public/styles/style.scss ./public/styles/style.css",
+    "scss": "sass --watch ./public/styles/style.scss:./public/styles/style.css",
     "nodemon": "nodemon server.js",
     "webpack": "webpack --mode development ./public/js/index.js --output ./public/bundle.js ",
     "webpack-watch": "webpack --mode development --watch ./public/js/index.js --output ./public/bundle.js",
     "startDev": "npm-run-all --parallel css  nodemon scss webpack webpack-watch",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "npm run css && npm run webpack"
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +24,8 @@
     "d3": "^5.7.0",
     "express": "^4.16.3",
     "hbs": "^4.0.1",
-    "hbs-utils": "0.0.4"
+    "hbs-utils": "0.0.4",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "dart-sass": "^1.25.0",

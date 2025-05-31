@@ -158,6 +158,7 @@ div.alfa.jumbotron {
 // Input Range Style https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/
 input[type=range] {
   -webkit-appearance: none;
+  appearance: none;
   margin: 18px 0;
   width: 100%;
 }
@@ -168,7 +169,7 @@ input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
   height: 8.4px;
   cursor: pointer;
-  animate: 0.2s;
+  animation-duration: 0.2s;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
   @include backgroundTheme();
   //background: #12c2e9;
@@ -194,7 +195,7 @@ input[type=range]::-moz-range-track {
   width: 100%;
   height: 8.4px;
   cursor: pointer;
-  animate: 0.2s;
+  animation-duration: 0.2s;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
   @include backgroundTheme();
   //background: #12c2e9;
@@ -214,7 +215,7 @@ input[type=range]::-ms-track {
   width: 100%;
   height: 8.4px;
   cursor: pointer;
-  animate: 0.2s;
+  animation-duration: 0.2s;
   background: transparent;
   border-color: transparent;
   border-width: 16px 0;
