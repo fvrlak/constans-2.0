@@ -1,0 +1,76 @@
+<nav class="navbar navbar-light bg-transparent" id="navbar">
+   <a target="_blank" href="https://www.github.com/fvrlak/constans.git" class="aaa"><i class="fab fa-github fa-2x" id="git"></i></a>
+</nav>
+
+<div class="alfa jumbotron" style="overflow:auto">
+    
+    <div class="jumbotron" id="alfajumbo">
+    <div class="UI selectedConstantWrapper">
+           <span><div id="selectedConstant"></div></span> 
+        </div>
+        <div >
+        <form class="UI" id="tableForm" action="/prog" method="post" name="form" autocomplete="off" >
+            <button class="n" name="name" value="pi" type="submit">&pi;</button>
+            <button  class="n" name="name" value="e" type="submit">&#8455;</button>
+            <button  class="n" name="name" value="phi" type="submit">&phi;</button>
+            <button  class="n" name="name" value="Euler–Mascheroni" type="submit">&gamma;</button>
+            <button  class="n" name="name" value="log2" type="submit">log<sub>2</sub></button>
+            <button class="n" name="name" value="log10" type="submit">log<sub>10</sub></button>
+            <button class="n" name="name" value="sqrt2" type="submit">&radic;<span>2</span></button>
+            <button class="n" name="name" value="sqrt3" type="submit">&radic;<span>3</span></button>
+            <button class="n" name="name" value="gamma(1_4)" type="submit">&Gamma;(<sup>1</sup>&frasl;<sub>4</sub>)</button>
+            <button class="n" name="name" value="catalan" type="submit">G</button>
+            <button class="n" name="name" value="lemniscate" type="submit">&infin;</button>
+        </form>
+        </div>
+        <div class='UI container '>
+            <div class="row">
+                <div class="col-2 inputLabels">fast</div>
+                <div class="col-8">
+                    <input type="range" id="range" name="volume" min="1" max="1000">
+                </div>
+                <div class="col-2 inputLabels">slow</div>
+            </div>
+        </div>
+        <div class="UI playInterface">
+            <button class='btn btn-info' id="previous"><i class="fas fa-step-backward"></i></button>
+            <button class='btn btn-success' id="animateButton"></button>
+            <button class='btn btn-info' id="forward"><i class="fas fa-step-forward"></i></button>
+        </div>
+        <div class="soundButtonWrapper">
+            <button class='btn btn-warning' id="soundButton"></button>
+        </div>
+        <div class='UI jumpInputWrapper'>
+            <span >Jump to</span>
+            <input id="jumpInput" type="number" name="inputMove" placeholder=" Max: 1 000 000">
+            <input class="btn btn-dark" type="submit" value="Jump" id="jumpInputButton">
+        </div>
+    </div>
+    <div class="jumbotron" id="chartWrapper"> 
+            <div id="chart"></div>
+    </div>
+    <div id="analysis" class="jumbotron">
+        <ul class="list-group">
+            <li class="list-group-item">Current row <span id="cRow"></span></li>
+            <li class="list-group-item">Mean Range <span id="meanRange"></span></li>
+            <li class="list-group-item">Arithmetic Mean <span id="aMean"></span></li>
+            <li class="list-group-item">Geometric Mean <span id="gMean"></span></li>
+            <li class="list-group-item">Harmonic Mean <span id="hMean"></span></li>
+            <li class="list-group-item">Median <span id="median"></span></li>
+            <li class="list-group-item">Standart Deviation <span id="std"></span></li>
+            <li class="list-group-item">biggest number <span id="maxValue"></span></li>
+            <li class="list-group-item">Smallest number<span id="minValue"></span></li>
+            <li class="list-group-item">Zero : <span id="_zero"></span></li>
+            <li class="list-group-item">One : <span id="_one"></span></li>
+            <li class="list-group-item">Two : <span id="_two"></span></li>
+            <li class="list-group-item">Three : <span id="_three"></span></li>
+            <li class="list-group-item">Four : <span id="_four"></span></li>
+            <li class="list-group-item">Five : <span id="_five"></span></li>
+            <li class="list-group-item">Six : <span id="_six"></span></li>
+            <li class="list-group-item">Seven : <span id="_seven"></span></li>
+            <li class="list-group-item">Eight : <span id="_eight"></span></li>
+            <li class="list-group-item">nine : <span id="_nine"></span></li>
+        </ul>
+
+    </div>
+</div>

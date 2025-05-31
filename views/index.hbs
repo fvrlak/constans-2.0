@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        {{!-- Dependencies --}}
+        <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="lib/fontAwesome/css/all.css">
+        <script src="lib/bootstrap/jquery.min.js"></script>
+        <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+        <script src="lib/bootstrap/popper.min.js"></script>
+        <script src="lib/d3.min.js"></script>
+        <script src="https://d3js.org/d3-path.v1.min.js"></script>
+        <script src="lib/howler/howler.min.js"></script>
+        <link rel="stylesheet" href="./styles/style.css" type="text/css">
+        {{!--  --}}
+        <script type="text/javascript" src="/bundle.js"></script>
+    </head>
+<body id="body">
+     {{> jumbotron}}
+<script type='text/javascript'>
+console.log(innerWidth)
+const constant_data_array = JSON.parse(`[ {{constant_data}} ]`); // response from /routes/index.js (19)
+const constant_name = `{{constant_name}}`                        // response from /routes/index.js (20)
+const analyseData = window._CONSTANTS_GLOBAL._SORT2(constant_data_array);
+const testData = window._CONSTANTS_GLOBAL._SORT2(constant_data_array);// testData and analyseData must be separate vars to avoid mutation
+const sound = window._CONSTANTS_GLOBAL._SOUND; // public/js/index.js (143)
+
+var ArrayCounter = 0; // Counter of arrays inside testData ** testData[ArrayCounter] ** setInterval() increments ArrayCounter value
+var flag = 0; // if (flag % 2 == false or 0) {d3 chart is not active} else { d3 chart is active} 
+var soundFlag = 1; // if (soundFlag % 2 == true or 1) {audio is active} else {audio is not active}
+var analysis; // (286)
+var body = document.getElementById('body');
+var wrapper = document.getElementById('chartWrapper');
+var navbar = document.getElementById('navbar');
+    navbar.style.height = (window.innerHeight - wrapper.clientHeight) / 2 + 'px'
+var width = wrapper.clientWidth; 
+var height = wrapper.clientHeight / 2; 
+var range = document.getElementById('range');
+var rangeArray = [];
+var bar_width = 40;
+var xScale, yScale, xAxisGroup, xAxisGroup2, yAxisGroup, yAxisGroup2, g, g2;
+var yScaleUpper =  () => { // returns double value of max value @ yScale.domain (156) - therefore d3 bars can be rendered at the middle of the chart
+          let alpha = window._CONSTANTS_GLOBAL._SOUND(testData[ArrayCounter])
+          return testData[ArrayCounter][alpha.maxValueOcurr[0]] * 2 
+        }
+var button = document.getElementById('animateButton')
+      button.innerHTML = '<i></i>';
+      button.className = 'fas fa-play btn btn-success'
+      button.style.width = 96 + 'px'
+      button.style.height = 32 + 'px'
+    button.onclick = function (e) {
+      flag += 1;
+      flag % 2 == true ? (() => { // if d3 chart is running
+      e.target.innerHTML = '<i></i>';
+      e.target.className = 'fas fa-pause btn btn-warning'
+      e.target.style.width = 96 + 'px'
+      e.target.style.height = 32 + 'px'
+      })() 
+      :
+      (() => { // if d3 chart is stopped
+      e.target.innerHTML = '<i></i>'
+      e.target.className = 'fas fa-play btn btn-success'
+      e.target.style.width = 96 + 'px'
+      e.target.style.height = 32 + 'px'
+      })()}
+var soundButton = document.getElementById('soundButton')
+      soundButton.innerHTML = '<i></i>'
+      soundButton.className = 'fas fa-volume-off btn btn-danger'
+      soundButton.style.width = 48 + 'px'
+    soundButton.onclick = function (e) {
+      soundFlag += 1;
+      soundFlag % 2 == true ? (() => { // if audio is running
+      e.target.innerHTML = '<i></i>';
+      e.target.className = 'fas fa-volume-off btn btn-danger'
+      e.target.style.width = 48 + 'px'
+      })() 
+      :
+      (() => { // if audio is stopped
+      e.target.innerHTML = '<i></i>' 
+      e.target.className = 'fas fa-volume-up btn btn-success'
+      e.target.style.width = 48 + 'px'
+      })()}
+var previousButton = document.getElementById('previous')
+var forwardButton = document.getElementById('forward')
+var jumpInput = document.getElementById('jumpInput') 
+var jumpInputButton = document.getElementById('jumpInputButton').onclick = function(e) {
+    let n = Number(jumpInput.value)
+        jumpInput.placeholder = "Max 1 000 000"
+      flag % 2 == false ? (() => {
+      flag += 1
+      ArrayCounter = n
+      button.innerHTML = '<i></i>';
+      button.className = 'fas fa-pause btn btn-warning'
+      button.style.width = 96 + 'px'
+      button.style.height = 32 + 'px'
+      jumpInput.value = " "
+      })()
+      :
+      (() => {
+        n > 1000000 ? (() => jumpInput.value = " " )() : ArrayCounter = n
+      })() 
+    }
+  
+  function svgContainer () {
+  g = d3
+    .select('#chart')
+    .append('div')
+    .classed("svg-container", true)
+    .append('svg')
+    .attr('width', width )
+    .attr('height', height * 2 )
+    .attr('id', 'svgTop')
+    .attr('class','svgConstans')
+    .append('g')
+    .attr('transform', `translate(${bar_width},${- bar_width})`)
+    
+  //g2 = d3
+  //  .select('#chart')
+  //  .append('div')
+  //  .classed("svg-container", true)
+  //  .append('svg')
+  //  .attr('width',width)
+  //  .attr('height', height )
+  //  .attr('id', 'svgBottom')
+  //  .attr('class','svgConstans')
+  //  .append('g')
+
+     xScale = d3.scaleLinear()
+     yScale = d3.scaleLinear()
+     
+    xAxisGroup = g
+      .append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', `translate(${bar_width },${height})`)
+    yAxisGroup = g
+      .append('g')
+      .attr('class', 'y axis')
+      .attr('transform', `translate(0,${bar_width})`)
+    
+  }
+  function prog () {
+    function update () {
+      +function topChart () {
+       
+        yScale.domain([0, yScaleUpper()])
+              .range([height - bar_width ,bar_width])
+        xScale.domain([0, 10])
+              .range([0, width - 3/2 * bar_width])
+  
+        let xAxisCall = d3.axisBottom(xScale)
+        .tickFormat(function (d, i) {return i })
+          
+        let yAxisCall = d3.axisLeft(yScale)
+        .tickValues([]) // Solves no ticks
+
+        yAxisGroup.call(yAxisCall)
+        xAxisGroup.call(xAxisCall)
+        
+        var bars = g.selectAll('rect').data(testData[ArrayCounter])
+        bars.exit().remove()
+        bars
+          .attr('y', function (d, i) {
+            return yScale(d)  
+          })
+          .attr('x', function (d, i) {
+            return xScale(i)
+          })
+          .attr('height', function (d) {
+            return height - yScale(d) 
+          })
+          .attr('width', bar_width)
+          .attr('fill', '#12c2e9')
+        bars
+          .enter()
+          .append('rect')
+          .attr('y', function (d, i) {
+            return yScale(d) 
+          })
+          .attr('x', function (d, i) {
+            return xScale(i)
+          })
+          .attr('height', function (d) {
+            return height - yScale(d) 
+          })
+          .attr('width', bar_width)
+          .attr('fill', '#12c2e9')
+        }()
+      
+    }// update
+
+    let minSound =  () => window._CONSTANTS_GLOBAL._SOUND(testData[ArrayCounter]).minValueOcurr
+    let maxSound = () => window._CONSTANTS_GLOBAL._SOUND(testData[ArrayCounter]).maxValueOcurr
+    let chroma = {
+      /*
+       Values can be changed inside template literals after adding .mp3 files into lib/howler/sound/
+       I can choose instead of classical chromatic scale techno chromatic scale and that by adding
+       lib/howler/sound/0_techno.mp3  ** this will represent some note in techno sound
+       lib/howler/sound/1_techno.mp3  ** this will represent some note in techno sound
+       lib/howler/sound/2_techno.mp3  ** this will represent some note in techno sound 
+              ..............
+        and then from UI changing string inside template literals
+        let changing = () => { return techno,pop,classical,...}  
+        chroma0 : new Howl({src: [`lib/howler/sound/0_${changing()}.mp3`],loop: false}),
+      */
+           chroma0 : new Howl({src: [`lib/howler/sound/0_${'chroma'}.mp3`],loop: false}),
+           chroma1 : new Howl({src: [`lib/howler/sound/1_${'chroma'}.mp3`],loop: false}),
+           chroma2 : new Howl({src: [`lib/howler/sound/2_${'chroma'}.mp3`],loop: false}),
+           chroma3 : new Howl({src: [`lib/howler/sound/3_${'chroma'}.mp3`],loop: false}),
+           chroma4 : new Howl({src: [`lib/howler/sound/4_${'chroma'}.mp3`],loop: false}),
+           chroma5 : new Howl({src: [`lib/howler/sound/5_${'chroma'}.mp3`],loop: false}),
+           chroma6 : new Howl({src: [`lib/howler/sound/6_${'chroma'}.mp3`],loop: false}),
+           chroma7 : new Howl({src: [`lib/howler/sound/7_${'chroma'}.mp3`],loop: false}),
+           chroma8 : new Howl({src: [`lib/howler/sound/8_${'chroma'}.mp3`],loop: false}),
+           chroma9 : new Howl({src: [`lib/howler/sound/9_${'chroma'}.mp3`],loop: false}),
+           }
+    function audio () {
+          function min_max_sound () {
+            let keys = Object.keys(chroma)
+            chroma[keys[maxSound()[0]]].play()
+            chroma[keys[minSound()[0]]].play()
+          }
+          function current_number_sound () {
+            let keys = Object.keys(chroma)
+            chroma[keys[constant_data_array[ArrayCounter]]].play()
+          }
+          if (soundFlag % 2 == true) {
+            return {current_number_sound: current_number_sound(),min_max_sound: min_max_sound()}}
+          else null
+    }// audio
+    
+    function animate () {
+      function callback()  {
+        if (ArrayCounter == 999999) {
+            ArrayCounter = 0
+          }
+        if (flag % 2 == false) {
+          function operand(e) {
+            ArrayCounter = ArrayCounter + e
+            analysis = window._CONSTANTS_GLOBAL._ANALYSIS(analyseData[ArrayCounter])
+            update()
+            audio()
+            $('#cRow').text(ArrayCounter)
+            $('#range').text(analysis.range)
+            $('#meanRange').text(analysis.meanRange)
+            $('#aMean').text(analysis.aMean)
+            $('#hMean').text(analysis.hMean)
+            $('#gMean').text(analysis.gMean)
+            $('#median').text(analysis.median)
+            $('#std').text(analysis.std)
+            $('#maxValue').text(sound(testData[ArrayCounter]).maxValueOcurr)
+            $('#minValue').text(sound(testData[ArrayCounter]).minValueOcurr)
+            $(`#_zero`).text(testData[ArrayCounter][0])
+            $(`#_one`).text(testData[ArrayCounter][1])
+            $(`#_two`).text(testData[ArrayCounter][2])
+            $(`#_three`).text(testData[ArrayCounter][3])
+            $(`#_four`).text(testData[ArrayCounter][4])
+            $(`#_five`).text(testData[ArrayCounter][5])
+            $(`#_six`).text(testData[ArrayCounter][6])
+            $(`#_seven`).text(testData[ArrayCounter][7])
+            $(`#_eight`).text(testData[ArrayCounter][8])
+            $(`#_nine`).text(testData[ArrayCounter][9])
+            }
+          previousButton.onclick = function() {
+            operand(-1)
+          }
+          forwardButton.onclick = function() {
+            operand( 1)
+          }
+        }
+        if (flag % 2 == true) {
+          analysis = window._CONSTANTS_GLOBAL._ANALYSIS(analyseData[ArrayCounter])
+          update()
+          ArrayCounter++
+          audio()
+          $('#cRow').text(ArrayCounter)
+          $('#meanRange').text(analysis.meanRange)
+          $('#aMean').text(analysis.aMean)
+          $('#hMean').text(analysis.hMean)
+          $('#gMean').text(analysis.gMean)
+          $('#median').text(analysis.median)
+          $('#std').text(analysis.std)
+          $('#maxValue').text(sound(testData[ArrayCounter]).maxValueOcurr)
+          $('#minValue').text(sound(testData[ArrayCounter]).minValueOcurr)
+          $(`#_zero`).text(testData[ArrayCounter][0])
+          $(`#_one`).text(testData[ArrayCounter][1])
+          $(`#_two`).text(testData[ArrayCounter][2])
+          $(`#_three`).text(testData[ArrayCounter][3])
+          $(`#_four`).text(testData[ArrayCounter][4])
+          $(`#_five`).text(testData[ArrayCounter][5])
+          $(`#_six`).text(testData[ArrayCounter][6])
+          $(`#_seven`).text(testData[ArrayCounter][7])
+          $(`#_eight`).text(testData[ArrayCounter][8])
+          $(`#_nine`).text(testData[ArrayCounter][9])
+        } 
+        else clearInterval()
+      }
+      var interval = setInterval(callback,500)
+      range.onchange = function (e) { 
+      rangeArray.unshift(Number(e.target.value))
+      clearInterval(interval)
+      interval = setInterval(callback,rangeArray[0])
+      }
+    } 
+    animate()
+  }// prog
+  function effects () {
+    let c = document.getElementById('selectedConstant')
+    let buttons = document.querySelectorAll('.n')
+    
+    if (constant_name != "") {
+        c.innerHTML = `${constant_name} `
+    let parsed_constant_names = function () {
+          switch(constant_name) {
+            case 'pi':
+              return 'Pi'
+              break;
+            case 'catalan':
+              return 'Catalan%27s_constant'
+              break;
+            case 'e':
+              return 'E_(mathematical_constant)'
+              break;
+            case 'phi':
+              return 'Golden_ratio'
+              break;
+            case 'Euler–Mascheroni':
+              return 'Euler–Mascheroni_constant'
+              break;
+            case 'log2':
+              return 'Natural_logarithm'
+              break;
+            case 'log10':
+              return 'Natural_logarithm'
+              break;
+            case 'gamma(1_4)':
+              return 'Gamma_function'
+              break;
+            case 'sqrt2':
+              return 'Square_root_of_2'
+              break;
+            case 'sqrt3':
+              return 'Square_root_of_3'
+              break;
+            case 'lemniscate':
+              return 'lemniscate'
+              break;
+          }
+        }
+    let wiki = document.createElement('a')
+        wiki.setAttribute('id','wikiLink')
+        wiki.href = `https://wikipedia.org/wiki/${parsed_constant_names()}`
+        wiki.target = '_blank'
+        c.append(wiki)
+    let logo = wiki.appendChild(document.createElement('i'))
+        logo.setAttribute('class', 'fab fa-wikipedia-w')
+    let highlightButtons = () => { 
+      let beta = []
+      Array.from(buttons).map(e => beta.push(e.value))
+      return beta.findIndex((e) => e == constant_name)
+      }
+    function highlight () { buttons[highlightButtons()].style.color = 'white'
+                            buttons[highlightButtons()].style.border = '2px solid wheat'}
+    highlight()
+    }
+    if (constant_name == "") {
+      c.innerHTML = "<h3>Select constant</h3>"
+    }
+  }
+  var analysInputs = document.querySelectorAll('.list-group-item')
+  var parsedAnalysInputs = Array.from(analysInputs) 
+      parsedAnalysInputs.map(e => e.style.padding = '2px')
+  function main () {
+    svgContainer()  
+    effects()
+    prog()
+    setInterval((() => ArrayCounter < 0 ? ArrayCounter = 0 : null),1)    
+  }
+  main()
+  
+</script>
+        
+    </body>
+
+</html>

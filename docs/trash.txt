@@ -1,0 +1,107 @@
+<div class="container">
+
+        <form id="tableForm" action="/prog" method="post">
+            <div class="columns">
+                <div class="column-col-6">
+                    <select class="form-select" name="select">
+
+                        <option class="option" selected="false">Choose constant</option>
+                        <option class="option" value="pi">&pi; </option>
+                        <option class="option">&phi;</option>
+                        <option class="option">&#8455;</option>
+
+                    </select>
+                </div>
+                <div class="column-col-6">
+                    <label class="form-label" for="input_value">List numbers</label>
+                    <input class="form-input" type="number" name="input_value" placeholder="(Optional)">
+                </div>
+            </div>
+    </div>
+    </form>
+
+    <button class="btn btn-primary">Submit</button>
+
+    </div>
+    </div>
+
+
+    {{!-- Bootstrap --}}
+
+    {{!-- <form id="tableForm" action="/prog" method="post">
+        <div class="form-group">
+            <select class="form-select" name="select">
+                <option class="option">Choose constant</option>
+                <option value="pi" class="option">&pi; </option>
+                <option class="option">&phi;</option>
+                <option class="option">&#8455;</option>
+            </select>
+            <label class="form-label" for="input-example-1"></label>
+            <input class="form-input" type="number" name="input_value" placeholder="(Optional)">
+        </div>
+        <input type="submit" />
+    </form>
+    </div>
+    <a target="_blank" href="https://www.github.com/fvrlak/constans.git"><i class="fab fa-github fa-5x"></i></a>
+    --}}
+
+    {{!-- <header class="navbar">
+        <section class="navbar-section">
+            <form id="tableForm" action="/prog" method="post">
+                <div class="form-group">
+                    <select class="form-select" name="select">
+                        <option class="option">Choose constant</option>
+                        <option value="pi" class="option">&pi; </option>
+                        <option class="option">&phi;</option>
+                        <option class="option">&#8455;</option>
+                    </select>
+                    <label class="form-label" for="input-example-1"></label>
+                    <input class="form-input" type="number" name="input_value" placeholder="(Optional)">
+                </div>
+                <input type="submit" />
+            </form>
+        </section>
+        <section class="navbar-section">
+            <div class="input-group input-inline">
+                <form class="navbar-form" id="tableForm" action="/prog" method="post">
+                    <div class="form-group">
+                        <select class="form-select" name="select">
+                            <option class="option">Choose constant</option>
+                            <option value="pi" class="option">&pi; </option>
+                            <option class="option">&phi;</option>
+                            <option class="option">&#8455;</option>
+                        </select>
+                        <label class="form-label" for="input-example-1">name</label>
+                        <input class="form-input" type="number" name="input_value" placeholder="(Optional)">
+                    </div>
+                    <input type="submit" />
+                </form>
+            </div>
+        </section>
+    </header>
+
+    --}}
+    var sessionStorageSpace = function(){ //from: https://stackoverflow.com/a/17887889
+        var allStrings = '';
+        for(var key in window.sessionStorage){
+            if(window.sessionStorage.hasOwnProperty(key)){
+                allStrings += window.sessionStorage[key];
+            }
+        }
+        return allStrings ? 3 + ((allStrings.length*16)/(8*1024)) + ' KB' : 'Empty (0 KB)';
+    };
+   console.log(sessionStorageSpace())
+
+   // form.elements[0].namedItem(constant_name).selected = true
+    // form.elements[3].checked = true
+
+    //"start": "npm-run-all --parallel css  nodemon scss webpack webpack-watch"
+grid : https://css-tricks.com/snippets/css/complete-guide-grid/
+
+        (1714)//"flatmap-stream": "^0.1.0",
+        (2127)//"flatmap-stream": {
+    //  "version": "0.1.1",
+    //  "resolved": "https://registry.npmjs.org/flatmap-stream/-/flatmap-stream-0.1.1.tgz",
+    //  "integrity": "sha512-lAq4tLbm3sidmdCN8G3ExaxH7cUCtP5mgDvrYowsx84dcYkJJ4I28N7gkxA6+YlSXzaGLJYIDEi9WGfXzMiXdw==",
+    //  "dev": true
+    },
